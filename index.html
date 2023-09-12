@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up and Sign In</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+        <h1 class="text-2xl text-center text-blue-500 mb-6">Sign Up</h1>
+        <form id="signupForm" class="space-y-4">
+            <div>
+                <input type="text" id="signupFullname" placeholder="Full Name" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <div>
+                <input type="email" id="signupEmail" placeholder="Email Address" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <div>
+                <input type="text" id="signupUsername" placeholder="Username" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <div>
+                <input type="password" id="signupPassword" placeholder="Password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <div>
+                <input type="password" id="signupVerifyPassword" placeholder="Verify Password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:bg-blue-300">Sign Up</button>
+            </div>
+        </form>
+
+        <h1 class="text-2xl text-center text-blue-500 mt-8 mb-6">Sign In</h1>
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <input type="text" id="loginUsername" placeholder="Username" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <div>
+                <input type="password" id="loginPassword" placeholder="Password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:bg-blue-300">Sign In</button>
+            </div>
+        </form>
+
+        <div id="message" class="text-center text-red-500 mt-4"></div>
+    </div>
+
+    <script>
+        // Function to store user data in localStorage
+        function storeUser(fullname, email, username, password) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push({ fullname, email, username, password });
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Function to check if a user exists in localStorage
+        function isUserExists(username, password) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            return users.some(user => user.username === username && user.password === password);
+        }
+
+        // Signup form submission
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const fullname = document.getElementById('signupFullname').value;
+            const email = document.getElementById('signupEmail').value;
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            const verifyPassword = document.getElementById('signupVerifyPassword').value;
+
+            if (fullname && email && username && password && verifyPassword) {
+                if (password !== verifyPassword) {
+                    document.getElementById('message').textContent = 'Passwords do not match. Please try again.';
+                } else {
+                    storeUser(fullname, email, username, password);
+                    document.getElementById('message').textContent = 'Signup successful! You can Sucessfully log in.';
+                }
+            } else {
+                document.getElementById('message').textContent = 'Please fill in all fields.';
+            }
+        });
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username && password) {
+                if (isUserExists(username, password)) {
+                    document.getElementById('message').textContent = 'Login successful!';
+                } else {
+                    document.getElementById('message').textContent = 'Invalid username or password.';
+                }
+            } else {
+                document.getElementById('message').textContent = 'Please fill in all fields.';
+            }
+        });
+    </script>
+</body>
+</html>
